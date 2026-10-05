@@ -39,40 +39,43 @@ Searched for any file that had the string "tor" in it and discovered what looks 
 | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, Account = InitiatingProcessAccountName, ParentFile = InitiatingProcessParentFileName
 
 ```
-<img width="1611" height="464" alt="Screenshot 2026-10-05 at 3 36 57 PM" src="https://github.com/user-attachments/assets/6bb91cae-1eb0-4c34-b934-dffdd68b5017" />
+<img width="1562" height="469" alt="Screenshot 2026-10-05 at 4 00 01 PM" src="https://github.com/user-attachments/assets/2a26ab92-3833-4650-a352-c953fb77f33d" />
+
 
 
 ---
 
 ### 2. Searched the `DeviceProcessEvents` Table
 
-Searched for any `ProcessCommandLine` that contained the string "tor-browser-windows-x86_64-portable-14.0.1.exe". Based on the logs returned, at `2024-11-08T22:16:47.4484567Z`, an employee on the "threat-hunt-lab" device ran the file `tor-browser-windows-x86_64-portable-14.0.1.exe` from their Downloads folder, using a command that triggered a silent installation.
+Searched for any `ProcessCommandLine` that contained the string "tor-browser-windows". Based on the logs returned, at `2026-09-30T20:32:11.764655Z`, an employee on the "threat-hunt-lab" device ran the file `tor-browser-windows-x86_64-portable-15.0.20.exe` from their Downloads folder, using a command that triggered a silent installation.
 
 **Query used to locate event:**
 
 ```kql
 
-DeviceProcessEvents  
-| where DeviceName == "threat-hunt-lab"  
-| where ProcessCommandLine contains "tor-browser-windows-x86_64-portable-14.0.1.exe"  
-| project Timestamp, DeviceName, AccountName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine
+DeviceProcessEvents
+| where DeviceName contains "EDR-Lab-Keres"
+| where ProcessCommandLine contains "tor-browser-windows"
+| project Timestamp, DeviceName, AccountName, ActionType, FileName, ProcessCommandLine, ProcessCreationTime, InitiatingProcessCommandLine, InitiatingProcessFileName
+
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/b07ac4b4-9cb3-4834-8fac-9f5f29709d78">
+<img width="1627" height="108" alt="Screenshot 2026-10-05 at 4 09 52 PM" src="https://github.com/user-attachments/assets/b9c1caff-8a99-4c6b-88d3-12204c81ff76" />
 
 ---
 
 ### 3. Searched the `DeviceProcessEvents` Table for TOR Browser Execution
 
-Searched for any indication that user "employee" actually opened the TOR browser. There was evidence that they did open it at `2024-11-08T22:17:21.6357935Z`. There were several other instances of `firefox.exe` (TOR) as well as `tor.exe` spawned afterwards.
+Searched for any indication that user "employee" actually opened the TOR browser. There was evidence that they did open it at `2026-09-30T20:33:16.2681622Z`. There were several other instances of `firefox.exe` (TOR) as well as `tor.exe` spawned afterwards.
 
 **Query used to locate events:**
 
 ```kql
-DeviceProcessEvents  
-| where DeviceName == "threat-hunt-lab"  
-| where FileName has_any ("tor.exe", "firefox.exe", "tor-browser.exe")  
-| project Timestamp, DeviceName, AccountName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine  
-| order by Timestamp desc
+DeviceProcessEvents
+| where DeviceName contains "EDR-Lab-Keres"
+| where FileName has_any ("firefox.exe", "tor.exe", "tor-browser.exe")
+| order by TimeGenerated desc 
+| project Timestamp, DeviceName, AccountName, ActionType, FileName, FolderPath, ProcessCommandLine, InitiatingProcessCommandLine, InitiatingProcessFileName
+
 ```
 <img width="1212" alt="image" src="https://github.com/user-attachments/assets/b13707ae-8c2d-4081-a381-2b521d3a0d8f">
 
