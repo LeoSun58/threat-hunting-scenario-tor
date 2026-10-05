@@ -4,7 +4,7 @@
 - [Scenario Creation](https://github.com/LeoSun58/threat-hunting-scenario-tor/blob/main/threat-hunting-scenario-tor-event-creation.md) 
 
 ## Platforms and Languages Leveraged
-- Windows 10 Virtual Machines (Microsoft Azure)
+- Windows 11 Virtual Machines (Microsoft Azure)
 - EDR Platform: Microsoft Defender for Endpoint
 - Kusto Query Language (KQL)
 - Tor Browser
@@ -25,20 +25,22 @@ Management suspects that some employees may be using TOR browsers to bypass netw
 
 ### 1. Searched the `DeviceFileEvents` Table
 
-Searched for any file that had the string "tor" in it and discovered what looks like the user "employee" downloaded a TOR installer, did something that resulted in many TOR-related files being copied to the desktop, and the creation of a file called `tor-shopping-list.txt` on the desktop at `2024-11-08T22:27:19.7259964Z`. These events began at `2024-11-08T22:14:48.6065231Z`.
+Searched for any file that had the string "tor" in it and discovered what looks like the user "kerestel" downloaded a TOR installer, did something that resulted in many TOR-related files being copied to the desktop, and the creation of a file called `tor-shopping-list.txt` on the desktop at `2026-09-30T19:34:41.341423Z`. These events began at `2026-09-30T20:29:25.5370513Z`.
 
 **Query used to locate events:**
 
 ```kql
-DeviceFileEvents  
-| where DeviceName == "threat-hunt-lab"  
-| where InitiatingProcessAccountName == "employee"  
-| where FileName contains "tor"  
-| where Timestamp >= datetime(2024-11-08T22:14:48.6065231Z)  
-| order by Timestamp desc  
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, Account = InitiatingProcessAccountName
+ DeviceFileEvents
+| where FileName contains "tor" 
+| where DeviceName contains "EDR-Lab-Keres"
+| where InitiatingProcessAccountName == "kerestel"
+| where Timestamp >= datetime('2026-09-30T20:29:25.5370513Z')
+| order by Timestamp desc
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, Account = InitiatingProcessAccountName, ParentFile = InitiatingProcessParentFileName
+
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/71402e84-8767-44f8-908c-1805be31122d">
+<img width="1611" height="464" alt="Screenshot 2026-10-05 at 3 36 57 PM" src="https://github.com/user-attachments/assets/6bb91cae-1eb0-4c34-b934-dffdd68b5017" />
+
 
 ---
 
