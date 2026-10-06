@@ -65,7 +65,7 @@ DeviceProcessEvents
 
 ### 3. Searched the `DeviceProcessEvents` Table for TOR Browser Execution
 
-Searched for any indication that user "employee" actually opened the TOR browser. There was evidence that they did open it at `2026-09-30T20:33:16.2681622Z`. There were several other instances of `firefox.exe` (TOR) as well as `tor.exe` spawned afterwards.
+Searched for any indication that user "kerestel" actually opened the TOR browser. There was evidence that they did open it at `2026-09-30T20:33:16.2681622Z`. There were several other instances of `firefox.exe` (TOR) as well as `tor.exe` spawned afterwards.
 
 **Query used to locate events:**
 
@@ -77,7 +77,8 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ActionType, FileName, FolderPath, ProcessCommandLine, InitiatingProcessCommandLine, InitiatingProcessFileName
 
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/b13707ae-8c2d-4081-a381-2b521d3a0d8f">
+<img width="1625" height="468" alt="Screenshot 2026-10-06 at 10 36 48 AM" src="https://github.com/user-attachments/assets/c0a5cb76-6605-4fa7-abd0-94c78a230675" />
+
 
 ---
 
@@ -88,15 +89,15 @@ Searched for any indication the TOR browser was used to establish a connection u
 **Query used to locate events:**
 
 ```kql
-DeviceNetworkEvents  
-| where DeviceName == "threat-hunt-lab"  
-| where InitiatingProcessAccountName != "system"  
-| where InitiatingProcessFileName in ("tor.exe", "firefox.exe")  
-| where RemotePort in ("9001", "9030", "9040", "9050", "9051", "9150", "80", "443")  
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessFolderPath  
-| order by Timestamp desc
+DeviceNetworkEvents
+| where DeviceName contains "EDR-Lab-Keres"
+| where InitiatingProcessAccountName != "system"
+| where InitiatingProcessFileName in ("firefox.exe", "tor.exe")
+| where RemotePort in ("9001", "9030", "9040", "9050", "9150", "80", "443")
+| project TimeGenerated, DeviceName, InitiatingProcessAccountName, ActionType, RemoteIP, RemotePort, RemoteUrl, LocalIP, InitiatingProcessFileName, InitiatingProcessFolderPath
+| order by TimeGenerated desc
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/87a02b5b-7d12-4f53-9255-f5e750d0e3cb">
+<img width="1432" height="354" alt="Screenshot 2026-10-06 at 10 40 01 AM" src="https://github.com/user-attachments/assets/28eb9bcf-90fd-4380-b2ce-36be4530caf2" />
 
 ---
 
