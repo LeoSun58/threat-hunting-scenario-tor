@@ -138,7 +138,7 @@ DeviceNetworkEvents
 - **Timestamps:**
   - `2026-09-30T20:33:37.6187466Z` - Connected to `162.251.116.26` on port `443`.
   - `2026-10-01T01:36:30.197321Z` - Local connection to `127.0.0.1` on port `9150`.
-- **Event:** Additional TOR network connections were established, indicating ongoing activity by user "employee" through the TOR browser.
+- **Event:** Additional TOR network connections were established, indicating ongoing activity by user "kerestel" through the TOR browser.
 - **Action:** Multiple successful connections detected.
 
 ### 6. File Creation - TOR Shopping List
